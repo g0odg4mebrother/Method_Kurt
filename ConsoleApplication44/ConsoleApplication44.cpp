@@ -1,31 +1,49 @@
-﻿#define _USE_MATH_DEFINES
 #include <iostream>
 #include <cmath>
-using namespace std;
 
-double f(double x) {
-    return sin(x); 
+// Функция, определяющая правую часть дифференциального уравнения
+double f(double t, double y) {
+    // Пример функции: y' = t * y
+    return t * y;
 }
-double Method_Kurt(double a, double b, int n) {
-    double h = (b - a) / n; 
-    double sum = 0.5 * (f(a) + f(b)); 
 
-    for (int i = 1; i < n; ++i) {
-        double x = a + i * h;
-        sum += f(x);
+// Метод Рунге — Кутты четвертого порядка
+void rungeKutta4(double t0, double y0, double h, int N, double* t, double* y) 
+{
+    t[0] = t0;
+    y[0] = y0;
+
+    for (int i = 0; i < N; ++i) {
+        double k1 = f(t[i], y[i]);
+        double k2 = f(t[i] + h / 2, y[i] + h * k1 / 2);
+        double k3 = f(t[i] + h / 2, y[i] + h * k2 / 2);
+        double k4 = f(t[i] + h, y[i] + h * k3);
+
+        y[i + 1] = y[i] + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
+        t[i + 1] = t[i] + h;
     }
-
-    return h * sum;
 }
 
-int main() {
-    setlocale(LC_ALL, "rus");
-    double a = 0.0;  
-    double b = M_PI; 
-    int n = 1000;  
+int main() 
+{
+    double t0 = 0.0;      // начальное время
+    double y0 = 1.0;      // начальное условие
+    double T = 2.0;       // конечное время
+    const int N = 100;          // количество шагов
 
-    double integral = Method_Kurt(a, b, n);
-    cout << "Приблизительное значение интеграла: " << integral << endl;
+    // Шаг интегрирования
+    double h = (T - t0) / N;
+
+    // Массивы для хранения значений t и y
+    double t[N + 1];
+    double y[N + 1];
+
+    // Решение методом Рунге — Кутты
+    rungeKutta4(t0, y0, h, N, t, y);
+
+    for (int i = 0; i <= N; ++i) {
+        std::cout << "t[" << i << "] = " << t[i] << ", y[" << i << "] = " << y[i] << std::endl;
+    }
 
     return 0;
 }
