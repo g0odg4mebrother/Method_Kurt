@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+using namespace std;
 
 // Функция, определяющая правую часть дифференциального уравнения
 double f(double t, double y) {
@@ -42,7 +43,7 @@ int main()
     rungeKutta4(t0, y0, h, N, t, y);
 
     for (int i = 0; i <= N; ++i) {
-        std::cout << "t[" << i << "] = " << t[i] << ", y[" << i << "] = " << y[i] << std::endl;
+        cout << "t[" << i << "] = " << t[i] << ", y[" << i << "] = " << y[i] << endl;
     }
 
     return 0;
